@@ -24,6 +24,8 @@
   <!-- Main Stylesheet File -->
   <link href="css/style.css" rel="stylesheet">
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
  
 </head>
 
@@ -741,7 +743,8 @@
                     </h5>
                   </div>
                   <div>
-                      <form id="submit-form" action=""  role="form" class="contactForm" >
+                    <!-- form starts  here -->
+                      <form id="submit-form" form role="form" class="contactForm" >
                       <div id="sendmessage">Your message has been sent. Thank you!</div>
                       <div id="errormessage"></div>
                       <div class="row">
@@ -757,6 +760,12 @@
                             <div class="validation"></div>
                           </div>
                         </div>
+                        <!-- <div class="col-md-12 mb-3">
+                          <div class="form-group">
+                            <input type="tel" class="form-control" name="number" id="number" placeholder="Your number" data-rule="Phone" data-msg="Please enter a valid number" />
+                            <div class="validation"></div>
+                          </div>
+                        </div> -->
                         <div class="col-md-12 mb-3">
                             <div class="form-group">
                               <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
@@ -770,10 +779,11 @@
                           </div>
                         </div>
                         <div class="col-md-12">
-                          <button type="submit" class="button button-a button-big button-rouded">Send Message</button>
+                          <button type="submit" class="button button-a button-big button-rouded" value="Submit">Send Message</button>
                         </div>
                       </div>
                     </form>
+                    <!-- form Ends here -->
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -840,17 +850,17 @@
 
   <!-- JavaScript Libraries -->
 <!--	kili-->
-	<script>
+	 <script>
         $("#submit-form").submit((e)=>{
             e.preventDefault()
             $.ajax({
-                url:"https://script.google.com/macros/library/d/1HVFQIGRfLfVw-6s0zq4vQjEL7RMtLHtJfOLp7gP5Mb-A9mIEp0ObaA9E/1",
+                url:"https://formsubmit.co/ajunair0@gmail.com",
                 data:$("#submit-form").serialize(),
                 method:"post",
                 success:function (response){
                     alert("Form submitted successfully")
                     window.location.reload()
-                    //window.location.href="https://google.com"
+                   window.location.href="index.html"
                 },
                 error:function (err){
                     alert("Something Error")
@@ -858,8 +868,9 @@
                 }
             })
         })
-    </script>
+    </script> 
 <!--	kili-->
+
   <script src="lib/jquery/jquery.min.js"></script>
   <script src="lib/jquery/jquery-migrate.min.js"></script>
   <script src="lib/popper/popper.min.js"></script>
