@@ -744,7 +744,7 @@
                   </div>
                   <div>
                     <!-- form starts  here -->
-                      <form id="submit-form" role="form" class="contactForm" action="">
+                    <form id="submit-form" role="form" class="contactForm" action="">
                       <div id="sendmessage">Your message has been sent. Thank you!</div>
                       <div id="errormessage"></div>
                       <div class="row">
@@ -752,20 +752,21 @@
                           <div class="form-group">
                             <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" required/>
                             <div class="validation"></div>
+                            <div class="validation-message" id="validation-name"></div> <!-- Validation message for name -->
                           </div>
                         </div>
                         <div class="col-md-12 mb-3">
                           <div class="form-group">
-                            <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" required/>
+                            <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" disabled required/>
                             <div class="validation"></div>
+                            <div class="validation-message" id="validation-email"></div> <!-- Validation message for email -->
                           </div>
                         </div>
-                        
                         <div class="col-md-12 mb-3">
-                            <div class="form-group">
-                              <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" required/>
-                              <div class="validation"></div>
-                            </div>
+                          <div class="form-group">
+                            <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" required/>
+                            <div class="validation"></div>
+                          </div>
                         </div>
                         <div class="col-md-12 mb-3">
                           <div class="form-group">
@@ -774,7 +775,7 @@
                           </div>
                         </div>
                         <div class="col-md-12">
-                          <button type="submit" class="button button-a button-big button-rouded" value="submit">Send Message</button>
+                          <button type="submit" class="button button-a button-big button-rouded" id="submit-button" disabled>Send Message</button>
                         </div>
                       </div>
                     </form>
@@ -839,25 +840,89 @@
     </footer>
   </section>
   <!-- Submission script -->
+  
   <script>
-    $("#submit-form").submit((e)=>{
-        e.preventDefault()
-        $.ajax({
-            url:"https://script.google.com/macros/s/AKfycbwwP7WJVATx16x728DliAjWSf7BjfwgEH1uyvua3tYR5pz5IyBOMMsFs6j157BzraqnaQ/exec",
-            data:$("#submit-form").serialize(),
-            method:"post",
-            success:function (response){
-                alert("Form submitted successfully")
-                window.location.reload()
-                window.location.href="index.html"
-            },
-            error:function (err){
-                alert("Something Error")
+    // Validation functions
+  function validateName(name) {
+    return /^[a-zA-Z]+$/.test(name); // Only alphabets allowed
+  }
 
-            }
-        })
-    })
-</script>
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); // Basic email format validation
+  }
+  
+    // Toggle submit button based on validation
+    function toggleSubmitButton() {
+      const nameValid = validateName($("#name").val());
+      const emailValid = validateEmail($("#email").val());
+      const submitButton = $("#submit-button"); // Cache the submit button element
+  
+      if (nameValid && emailValid) {
+        submitButton.prop("disabled", false);
+        submitButton.removeClass("disabled-button"); // Remove the disabled button style
+        $("#validation-message").text(""); // Clear validation message
+      } else {
+        submitButton.prop("disabled", true);
+        submitButton.addClass("disabled-button"); // Add the disabled button style
+        $("#validation-message").text("Please fill in valid name and email.");
+      }
+    }
+  
+    // Name field validation on blur
+    $("#name").blur(function () {
+      const nameInput = $(this);
+      const name = nameInput.val();
+  
+      if (name === "") {
+        nameInput.addClass("invalid");
+        $("#validation-name").text("Name is required.");
+      } else if (!validateName(name)) {
+        nameInput.addClass("invalid");
+        $("#validation-name").text("Name can only contain alphabets.");
+      } else {
+        nameInput.removeClass("invalid");
+        $("#validation-name").text("");
+        $("#email").prop("disabled", false);
+      }
+  
+      toggleSubmitButton();
+    });
+  
+    // Email field validation on blur
+    $("#email").blur(function () {
+      const emailInput = $(this);
+      const email = emailInput.val();
+  
+      if (validateEmail(email)) {
+        emailInput.removeClass("invalid");
+        $("#validation-email").text("");
+      } else {
+        emailInput.addClass("invalid");
+        $("#validation-email").text("Please enter a valid email.");
+      }
+  
+      toggleSubmitButton();
+    });
+  
+    // Form submission
+    $("#submit-form").submit(function (e) {
+      e.preventDefault();
+  
+      $.ajax({
+        url: "https://script.google.com/macros/s/AKfycbwwP7WJVATx16x728DliAjWSf7BjfwgEH1uyvua3tYR5pz5IyBOMMsFs6j157BzraqnaQ/exec",
+        data: $("#submit-form").serialize(),
+        method: "post",
+        success: function (response) {
+          alert("Form submitted successfully");
+          window.location.reload();
+          window.location.href = "index.html";
+        },
+        error: function (err) {
+          alert("Something Error");
+        }
+      });
+    });
+  </script>
   
   
   <!--/ Section Contact-footer End /-->
